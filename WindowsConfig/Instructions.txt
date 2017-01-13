@@ -1,15 +1,16 @@
 Run Powershell as Administrator and execute below commands  
 
 1) Set ExecutionPolicy for admin to run powershell commands
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted  
 
 2) Enable Remote Desktop
-set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
 
 3) Allow incoming RDP on firewall
-Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
 4) Enable secure RDP authentication
+
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted  
+set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1   
 
 5) Reset Password for admin user
