@@ -1,0 +1,28 @@
+Run Powershell as Administrator and execute below commands  
+
+1) Set ExecutionPolicy for admin to run powershell commands
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted  
+
+2) Enable Remote Desktop
+set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+
+3) Allow incoming RDP on firewall
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+4) Enable secure RDP authentication
+set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1   
+
+5) Reset Password for admin user
+./resetlocalAdminpassword.ps1 -newpassword abcd1234!
+
+6) Start Winrm service
+Start-service -Name 'winrm'  
+Enable-PSRemoting -Force
+
+7) Configure Windows server to enable for Ansible
+./ConfigureRemotingForAnsible.ps1 -CertValidityDays 100 -SkipNetworkProfileCheck -ForceNewSSLCert
+
+Info:
+Pass the -CertValidityDays option to customize the expiration date of the generated certificate in powershell.     
+Pass the -SkipNetworkProfileCheck switch to configure winrm to listen on PUBLIC zone interfaces in powershell. (Without this option, the script will fail if any network interface on device is in PUBLIC zone)
+Pass the -ForceNewSSLCert switch to force a new SSL certificate to be attached to an already existing winrm listener in powershell. (Avoids SSL winrm errors on syspreped Windows images after the CN changes)     
